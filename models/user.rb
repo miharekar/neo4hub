@@ -8,8 +8,6 @@ class User
   property :email
 
   has_many :out, :followers, type: 'FOLLOWS', model_class: 'User'
-  has_many :out, :stars, type: 'STARS', model_class: 'Repository'
-  has_many :out, :watches, type: 'WATCHES', model_class: 'Repository'
   has_many :out, :repositories, type: 'OWNS', model_class: 'Repository'
   has_many :in, :organizations, type: 'MEMBER', model_class: 'Organization'
 

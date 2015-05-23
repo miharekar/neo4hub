@@ -8,8 +8,6 @@ class Repository
   property :url
 
   has_many :out, :forks, type: 'FORK', model_class: 'Repository'
-  has_many :in, :stars, type: 'STARS', model_class: 'User'
-  has_many :in, :watches, type: 'WATCHES', model_class: 'User'
   has_one :in, :owner, type: 'OWNS', model_class: false
 
   def from_github(data)
