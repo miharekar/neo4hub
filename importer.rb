@@ -11,8 +11,8 @@ class Importer
     @client = Octokit::Client.new(access_token: ENV['ACCESS_TOKEN'])
   end
 
-  def import
-    # empty_db
+  def import(empty: false)
+    empty_db if empty
     users.each do |login|
       p "Importing #{login}..."
       user = import_user(login)
@@ -89,7 +89,7 @@ class Importer
       organization = Organization.find_or_create_by(login: data.login) do |org|
         org.from_github(data)
       end
-      organization.create_rel('MEMBER', user) unless org.members.include?(user)
+      organization.create_rel('MEMBER', user) unless organization.members.include?(user)
     end
   end
 end
