@@ -11,4 +11,4 @@ users = %w(
   mrfoto mfilej otobrglez bbatsov ahoward juliancheal benlovell sferik
   myabc bogdan listochkin le0pard petrokoriakin fxposter vladislav-gorbenko
 )
-Importer.new(users).import(empty:true)
+Importer.new(users).import
