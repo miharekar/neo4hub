@@ -3,36 +3,11 @@ require 'repository'
 require 'user'
 
 class Importer
-  attr_reader :users, :client
+  attr_reader :client
 
-  def initialize(users)
-    @users = users
+  def initialize
     Octokit.auto_paginate = true
     @client = Octokit::Client.new(access_token: ENV['ACCESS_TOKEN'])
-  end
-
-  def import(empty: false)
-    empty_db if empty
-    users.each do |login|
-      p "Importing #{login}..."
-      user = import_user(login)
-      p '...followers'
-      import_followers(user)
-      p '...followings'
-      import_followings(user)
-      p '...repositories'
-      import_owned_repositories(user)
-      p '...organizations'
-      import_organizations(user)
-    end
-  end
-
-  private
-
-  def empty_db
-    User.delete_all
-    Repository.delete_all
-    Organization.delete_all
   end
 
   def import_user(login)
@@ -56,11 +31,6 @@ class Importer
     end
   end
 
-  def create_followers(follower, following)
-    return if follower.followers.include?(following)
-    follower.create_rel('FOLLOWS', following)
-  end
-
   def import_owned_repositories(user)
     client.repos(user.login).each do |data|
       Repository.find_or_create_by(full_name: data.full_name) do |repo|
@@ -74,6 +44,22 @@ class Importer
     end
   end
 
+  def import_organizations(user)
+    client.organizations(user.login).each do |data|
+      org = Organization.find_or_create_by(login: data.login) do |o|
+        o.from_github(data)
+      end
+      org.create_rel('MEMBER', user) unless org.members.include?(user)
+    end
+  end
+
+  private
+
+  def create_followers(follower, following)
+    return if follower.followers.include?(following)
+    follower.create_rel('FOLLOWS', following)
+  end
+
   def create_source_repository(fork)
     data = client.repo(fork.full_name).source
     Repository.find_or_create_by(full_name: data.full_name) do |source|
@@ -81,15 +67,6 @@ class Importer
       klass = data.owner.type.constantize
       owner = klass.find_or_create_by(login: data.owner.login)
       owner.create_rel('OWNS', source)
-    end
-  end
-
-  def import_organizations(user)
-    client.organizations(user.login).each do |data|
-      org = Organization.find_or_create_by(login: data.login) do |o|
-        o.from_github(data)
-      end
-      org.create_rel('MEMBER', user) unless org.members.include?(user)
     end
   end
 end
