@@ -16,9 +16,13 @@ class Importer
     users.each do |login|
       p "Importing #{login}..."
       user = import_user(login)
+      p '...followers'
       import_followers(user)
+      p '...followings'
       import_followings(user)
+      p '...repositories'
       import_owned_repositories(user)
+      p '...organizations'
       import_organizations(user)
     end
   end
@@ -32,14 +36,13 @@ class Importer
   end
 
   def import_user(login)
-    User.find_or_create_by(login: login) do |user|
+    User.find_or_create_by(login: login).tap do |user|
       data = client.user(login)
       user.from_github(data)
     end
   end
 
   def import_followers(user)
-    p '...followers'
     client.followers(user.login).each do |data|
       follower = User.find_or_create_by(login: data.login)
       create_followers(follower, user)
@@ -47,7 +50,6 @@ class Importer
   end
 
   def import_followings(user)
-    p '...followings'
     client.following(user.login).each do |data|
       following = User.find_or_create_by(login: data.login)
       create_followers(user, following)
@@ -60,7 +62,6 @@ class Importer
   end
 
   def import_owned_repositories(user)
-    p '...repositories'
     client.repos(user.login).each do |data|
       Repository.find_or_create_by(full_name: data.full_name) do |repo|
         repo.from_github(data)
@@ -84,12 +85,11 @@ class Importer
   end
 
   def import_organizations(user)
-    p '...organizations'
     client.organizations(user.login).each do |data|
-      organization = Organization.find_or_create_by(login: data.login) do |org|
-        org.from_github(data)
+      org = Organization.find_or_create_by(login: data.login) do |o|
+        o.from_github(data)
       end
-      organization.create_rel('MEMBER', user) unless organization.members.include?(user)
+      org.create_rel('MEMBER', user) unless org.members.include?(user)
     end
   end
 end
