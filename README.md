@@ -67,3 +67,11 @@ RETURN u, COUNT(o) as c
 ORDER BY c DESC
 LIMIT 10
 ```
+
+### Source repos of @RubySlovenia members
+
+```
+MATCH (o:Organization{login:'RubySlovenia'})-->(u)-->(r:Repository{source:true})
+RETURN u.name, collect(r.name), count(r) AS c
+ORDER BY c DESC
+```
