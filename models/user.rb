@@ -7,7 +7,7 @@ class User
   property :location
   property :email
 
-  has_many :out, :followers, type: 'FOLLOWS', model_class: 'User'
+  has_many :out, :followings, type: 'FOLLOWS', model_class: 'User'
   has_many :out, :repositories, type: 'OWNS', model_class: 'Repository'
   has_many :in, :organizations, type: 'MEMBER', model_class: 'Organization'
 

@@ -56,7 +56,7 @@ class Importer
   private
 
   def create_followers(follower, following)
-    return if follower.followers.include?(following)
+    return if follower.followings.include?(following)
     follower.create_rel('FOLLOWS', following)
   end
 
