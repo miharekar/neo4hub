@@ -8,7 +8,7 @@ class Repository
   property :url
 
   has_many :out, :forks, type: 'FORK', model_class: 'Repository'
-  has_one :in, :owner, type: 'OWNS', model_class: false
+  has_one :in, :owner, origin: :repositories, model_class: 'User'
 
   def from_github(data)
     update_attributes!(

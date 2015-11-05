@@ -6,7 +6,7 @@ class Organization
   property :url
 
   has_many :out, :members, type: 'MEMBER', model_class: 'User'
-  has_many :out, :repositories, type: 'OWNS', model_class: 'Repository'
+  has_many :out, :repositories, type: 'OWNS'
 
   def from_github(data)
     update_attributes!(
