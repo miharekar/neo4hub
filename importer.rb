@@ -1,7 +1,3 @@
-require 'organization'
-require 'repository'
-require 'user'
-
 class Importer
   attr_reader :client
 
@@ -36,10 +32,9 @@ class Importer
       Repository.find_or_create_by(full_name: data.full_name) do |repo|
         repo.from_github(data)
         user.create_rel('OWNS', repo)
-        if data.fork
-          source = create_source_repository(repo)
-          source.create_rel('FORK', repo)
-        end
+        next unless data.fork
+        source = create_source_repository(repo)
+        source.create_rel('FORK', repo)
       end
     end
   end
