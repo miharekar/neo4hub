@@ -2,7 +2,7 @@
 
 Importer from [GitHub API](https://developer.github.com/v3/) to [Neo4j](http://neo4j.com/) with [Neo4j.rb](http://neo4jrb.io/).
 
-Used for my [RubyC](http://rubyc.eu/) presentation.
+Used for my [RubyC](http://rubyc.eu/) and [Rails Remote Conf](https://railsremoteconf.com/) talks.
 
 # Some examples
 

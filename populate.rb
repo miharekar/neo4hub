@@ -1,14 +1,14 @@
-users = %w(
-  mrfoto mfilej otobrglez zzak tenderlove matz wycats josevalim dhh mislav
-  bbatsov ahoward juliancheal benlovell sferik myabc bogdan listochkin le0pard
-  petrokoriakin fxposter vladislav-gorbenko
-)
-
 $LOAD_PATH.unshift('.')
 require 'init'
 require 'importer'
+
 importer = Importer.new
-users.each do |login|
+%w(
+  ahoward amcaplan jodosha jessitron acuppy
+  kickinbahk mrfoto kerrizor ryanstout GregBaugues
+  CoralineAda schneems xionon freddyrangel indirect
+  tenderlove
+).each do |login|
   p "Importing #{login}..."
   user = importer.import_user(login)
   p '...followers'
