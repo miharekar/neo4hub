@@ -13,27 +13,59 @@ MATCH (o:Organization)-[m:MEMBER]->()
 RETURN o, COUNT(m) as c
 ORDER BY c DESC
 LIMIT 5
-```
-```
+
 MATCH ()-[f:FOLLOWS]->(u:User)
 RETURN u, COUNT(f) as c
 ORDER BY c DESC
 LIMIT 5
-```
-```
+
 MATCH (r:Repository)-[f:FORK]->()
 RETURN r, count(f) as c
 ORDER BY c DESC
 LIMIT 5
+
+MATCH (t:User{login:'tenderlove'})<--(u:User)-->(m:User{login:'mrfoto'})
+RETURN t, u, m
+```
+
+## Organizations
+
+```
+MATCH (rs:Organization{login:'RubySlovenia'})-->(m:User)
+RETURN rs, m
+
+MATCH (rs:Organization{login:'RubySlovenia'})-->(m)<--(f:User)
+RETURN m, f
+
+MATCH (rs:Organization{login:'RubySlovenia'})-->(m)<--(f:User)
+RETURN f.login
+
+MATCH (rs:Organization{login:'RubySlovenia'})-->(m)<--(f:User)
+RETURN COUNT(f)
 ```
 
 ## Shortest paths
 
-- `MATCH (ptujec:User{login:'Ptujec'}), (inakata:User{login:'inakata'}),  p = allShortestPaths((ptujec)-[*]-(inakata)) RETURN p`
-- `MATCH (thekemkid:User{login:'thekemkid'}), (inakata:User{login:'inakata'}),  p = allShortestPaths((thekemkid)-[*]-(inakata)) RETURN p`
-- `MATCH (thekemkid:User{login:'thekemkid'}), (inakata:User{login:'inakata'}),  p = shortestPath((thekemkid)-[*]-(inakata)) RETURN p`
+```
+MATCH (yehuda:User{login:'wycats'}), (jacek:User{login:'ncr'}),  p = allShortestPaths((yehuda)-[*]-(jacek))
+RETURN p
+
+MATCH (yehuda:User{login:'wycats'}), (jacek:User{login:'ncr'}),  p = shortestPath((yehuda)-[*]-(jacek))
+RETURN p
+```
 
 ## Misc
+
+### Source repos of @RubySlovenia members
+
+```
+MATCH (o:Organization{login:'RubySlovenia'})-->(u)-->(r:Repository{source:true})
+RETURN u, r
+
+MATCH (o:Organization{login:'RubySlovenia'})-->(u)-->(r:Repository{source:true})
+RETURN u.name, collect(r.name), count(r) AS c
+ORDER BY c DESC
+```
 
 ### Who forked Rails
 
@@ -45,33 +77,20 @@ RETURN r, f, u
 ### Friday hug
 
 ```
-MATCH (tenderlove:User{login:'tenderlove'})-->(f)-->(tenderlove)
+MATCH (tenderlove:User{login:'tenderlove'})-->(f:User)-->(tenderlove)
 RETURN f, tenderlove
 ```
 
-### Most source repos
+### Most repos/forks
 
 ```
 MATCH (u:User)-[o:OWNS]->(r:Repository{source:true})
-RETURN u, COUNT(o) as c
+RETURN u.name, u.login, COUNT(o) as c
 ORDER BY c DESC
 LIMIT 10
-```
 
-### Most forks
-
-```
-MATCH (u:User)-[o:OWNS]->(r:Repository)
-WHERE r.source = false
-RETURN u, COUNT(o) as c
+MATCH (u:User)-[o:OWNS]->(r:Repository{source:false})
+RETURN u.name, u.login, COUNT(o) as c
 ORDER BY c DESC
 LIMIT 10
-```
-
-### Source repos of @RubySlovenia members
-
-```
-MATCH (o:Organization{login:'RubySlovenia'})-->(u)-->(r:Repository{source:true})
-RETURN u.name, collect(r.name), count(r) AS c
-ORDER BY c DESC
 ```

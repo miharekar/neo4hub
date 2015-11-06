@@ -7,7 +7,7 @@ importer = Importer.new
   ahoward amcaplan jodosha jessitron acuppy
   kickinbahk mrfoto kerrizor ryanstout GregBaugues
   CoralineAda schneems xionon freddyrangel indirect
-  tenderlove
+  tenderlove FloorD matixmatix mfilej otobrglez
 ).each do |login|
   p "Importing #{login}..."
   user = importer.import_user(login)
