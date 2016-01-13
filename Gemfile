@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'neo4j', '~> 5.2.14'
+gem 'neo4j'
 gem 'octokit'
 gem 'pry'
 gem 'rubocop'
