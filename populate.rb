@@ -4,10 +4,10 @@ require 'importer'
 
 importer = Importer.new
 %w(
-  ahoward amcaplan jodosha jessitron acuppy
-  kickinbahk mrfoto kerrizor ryanstout GregBaugues
-  CoralineAda schneems xionon freddyrangel indirect
-  tenderlove FloorD matixmatix mfilej otobrglez
+  vidmantas tadassce giedriusr bugo liucijus mmozuras
+  andriusch tomasv jpalumickas eugenijusr nedomas
+  tenderlove wycats ryanb holman
+  mrfoto otobrglez matixmatix mfilej
 ).each do |login|
   p "Importing #{login}..."
   user = importer.import_user(login)
